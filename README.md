@@ -1,36 +1,38 @@
 # Exploratory classification modeling using R
 
 ## Project Description
-The objective of this brief demo is to explore a subset of the customer churn data from Kaggle.com to identify potentially effective predictor variables as well as explore relationship between the predictor data. Since this data was already put together in the same file by Kaggle.com, my base assumption is that the predictor variables are reasonably valid predictors for the response variable. Thus, the goal of this exercise is to validate this assumption. A description of the variables used in this demo is below. 
+The objective of this brief demo is to explore a subset of a customer churn data from Kaggle.com to identify potentially effective predictor variables as well as explore relationship between the predictor data. Since this data was already put together in the same file by Kaggle.com, my base assumption is that the predictor variables are reasonably valid predictors for the response variable. Thus, the goal of this exercise is to validate this assumption. A description of the variables used in this demo is below. 
 
 ![image](https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/b4f3d514-ccaf-46e8-ba0e-a8c794320da3)
 
 The source data description is:
 
-***source: Kaggle.com***
-***file name: Telco-Customer_Churn.csv***
-***reponse variable: Churn {binary: Yes/No}***
++ source: Kaggle.com
+
++ file name: Telco-Customer_Churn.csv
+
++ reponse variable: Churn binary: Yes/No
 
 My Rstudio session info is shown below as a benchmark for this demo:
 
 <img width="781" alt="image" src="https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/7a8f1dd9-31c2-4ac8-838b-1bf3bf0284ad">
 
-## Road map for this demo
-### step 1 import the source data file
-### step 2 explore the data set
-### step 3 develop an exploratory correlation funel model
-### step 4 potential predictor feature selection
-### step 5 adjust reponse variable for class imbalance
-### step 6 build an intial tree learning model
-### step 7 build a distributed random forest (DRF) model and a gradient boosting machine (GBM) model
-### step 8 evaluate the results
-### step 9 start the modeling process
+# Road map for this demo
+## step 1 import the source data file
+## step 2 explore the data set
+## step 3 develop an exploratory correlation funel model
+## step 4 potential predictor feature selection
+## step 5 adjust reponse variable for class imbalance
+## step 6 build an intial tree learning model
+## step 7 build H2O models
+## step 8 evaluate the results
+## step 9 start the modeling process
 
 --------------------------------------------------
 
-### step 1 import data file
+## step 1 import the source data file
 
-Validate that the input file dimensions 7,032 X 20 match the source data file. Note that 'seniorcitizen' is converted to a factor along with all other 'chr' data. 
+Validate that the input file dimensions [7,032 X 20] match the source data file. Note that 'seniorcitizen' is converted to a factor along with all other 'chr' data. 
 There were no data quality issues noted - I used skimr for the data quality testing.
 
 The first step is to import the source data to RStudio and start working on it.
@@ -73,9 +75,11 @@ summary(cust_churn)
 ```
 
 The initial data types and other info:
+
 ![image](https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/21a3a75c-1065-4414-b197-8af40bc5a02a)
 
 Produce a summary of the source data set:
+
 <img width="734" alt="image" src="https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/7033ec51-9fd3-47de-a481-049e16ecaa0d">
 
 --------------------------------------------------------------------------------
@@ -83,6 +87,7 @@ Produce a summary of the source data set:
 ### Step 2 explore the data set
 
 The first thing to do is to look for class imbalance in the response variable:
+
 ```
 #quick plot of the class balancing
 windows()
@@ -94,10 +99,11 @@ ggplot(cust_churn) +
 #get the class balance situation for the response variable
 prop.table(table(cust_churn$churn))
 ```
+
 There is a roughly 73% to 27% split between the 'Yes' and 'No' values for churn which is imbalanced. With such an imbalance, I will explore oversamling techniques
 such as ROSE.
 
-This is the  specific response variable percentage split:
+This is the specific response variable percentage split:
 
 <img width="273" alt="image" src="https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/5e2d9d67-3d9f-492b-84ea-81936d7f3de3">
 
@@ -130,18 +136,19 @@ Looking for outliers in the numeric values shows that only 'totalcharges' has an
 ![image](https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/d3adbc96-f915-4170-b2aa-d01e88075bb7)
 
 The next task is to explore the categorical data potential association with a Cramer's V function. For this example, I compared the predictors: 'contract'
-to 'paymentmethod' to see if there was any significant association with the same concern of potential multicolinearity.
+to 'paymentmethod' to see if there was any significant association with the same concern of potential multicollinearity.
 
 ```
 #use cramer's V for the test of association between suspect variables
 rcompanion::cramerV(x = cust_churn$contract,
                     y = cust_churn$paymentmethod)
 ```
+
 The Cramer's V metric = 0.2667. Since Cramer's V measures association between 0 and 1 (similar to a correlation coefficient), this result is not large enough to be concerned with. All of the potential categorical to categorical associations in this data set were tested and only a few were found to be somewhat strong. I will wait to complete the EDA portion before removing highly associated predictor variables. Below is a interpretation chart for Cramer's V metrics to add the needed context:
 
 <img width="866" alt="image" src="https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/ecb0b76e-2370-4379-9449-099d3b0004f1">
 
-The advantage of using Cramer's V for this is that this function adjusts the Chi-Square results for the sample size and then scales the output to an easily interpretable value between zero and one. Thus, it measures the effect size for Chi-Square results. 
+The advantage of using Cramer's V for this is it adjusts the Chi-Square results for the sample size and then scales the output to an easily interpretable value between zero and one. Thus, it measures the effect size for Chi-Square results. 
 
 The next task is to explore the potential numeric to categorical associations for potential multicolinearity. For this demo, I selected a few notional variables that I thought would be good examples of highly correlated variables in this grouping. One such example is shown below. 
 
@@ -157,7 +164,7 @@ A box plot by categorical group gives a quick visual to see any obvious correlat
 
 ![image](https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/3597a2dd-0905-47a2-b516-64ea7d481889)
 
-Now perform a computational test for this relationship using a Kruskal test
+Now perform a computational test for this relationship using a Kruskal test. The result is a p-value much less than 5% which indicates that this relationship is highly correlated and that this could lead to multicollinearity within the model.
 
 ```
 #computational test to determine the strength of the relationship
@@ -168,7 +175,7 @@ kruskal.test(totalcharges ~ deviceprotection,
              data = cust_churn)
 ```
 
-The idea with this test is that if the mean ranks are statistically significantly different between the groups (categorical variables) for the numeric
+The idea with this method is that if the mean ranks are statistically significantly different between the groups (categorical variables) for the numeric
 variables then the correlation between the variables is strong and should be considered for potential removal due to multicolinearity concerns. Note that categorical data does not 100% meet the underlying data assumption for a Kruskal test, I am considering this to be an acceptable'off-label' usage for this test.
 
 -----------------------------------------------------------------------------------------------------------
@@ -476,9 +483,13 @@ print(f2_score)
 
 ---------------------------------------------------------------------------------------------------------------------------------
 
-### Step 7 build a distributed random forest (DRF) model and a gradient boosting machine (GBM) model
+### Step 7 H2O models
 
-In general, these models are more complicated than a tree learning model. Also I am using the H2O platform to develop these models. The first section of this code for H2O is around house keeping and setting up the H2O cluster:
+Build a distributed random forest (DRF) model and a gradient boosting machine (GBM) model
+
+In general, these models are more complicated than a tree learning model. These are also exploratory models so little effort was put into thier configuration. Also I am using the H2O platform to develop these models which adds some complexity with the cluster set up process. 
+
+The first section of this code for H2O is around house keeping and setting up the H2O cluster:
 
 ```
 #load the needed libs
@@ -616,11 +627,13 @@ f2_score <- (1 + (precision * recall)^2) * precision * recall
 #print the F2 score
 print(f2_score)
 ```
+
 The DRF model has a much better F2 score than the tree learning model:
 
 <img width="476" alt="image" src="https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/1eb9fb2f-c506-46bd-afdc-36271a1dab40">
 
 Next, develop a gradient boosting machine model:
+
 ```
 #compute the gbm model
 h2o_gbm <- h2o::h2o.gbm(x = x,
@@ -645,6 +658,7 @@ h2o_gbm <- h2o::h2o.gbm(x = x,
             stopping_tolerance = 0.0005,  #used for early stopping
             seed = 12171968)
 ```
+
 The top 5 predictor VIF plot is below:
 
 ![image](https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/44d8de11-5124-4d31-930d-cba8636f9de7)
