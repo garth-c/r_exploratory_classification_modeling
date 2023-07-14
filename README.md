@@ -1,19 +1,39 @@
-Exploratory classification modeling using R
+# Exploratory classification modeling using R
 
-The objective of this brief demo is to explore a subset of the customer churn data set from Kaggle to identify potentially effective predictor variables as well as explore relationship between the predictors. Since this data was already put together in the same file by Kaggle, my base assumption is that the predictor variables are reasonably valid predictors for the response variable. Thus, the goal of this exercise is to validate this assumption. A description of the variables used in this demo is below. 
+## Project Description
+The objective of this brief demo is to explore a subset of the customer churn data from Kaggle.com to identify potentially effective predictor variables as well as explore relationship between the predictor data. Since this data was already put together in the same file by Kaggle.com, my base assumption is that the predictor variables are reasonably valid predictors for the response variable. Thus, the goal of this exercise is to validate this assumption. A description of the variables used in this demo is below. 
 
 ![image](https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/b4f3d514-ccaf-46e8-ba0e-a8c794320da3)
 
 The source data description is:
-source -> Kaggle.com
-file name -> Telco-Customer_Churn.csv
-reponse variable -> Churn {binary: Yes/No}
 
-A description of the source data from R is below. Validate that the input file dimensions 7,032 X 20 match the source data file. Note that 'seniorcitizan' is converted to a factor along with all other 'chr' data. There were no data quality issues noted - I used skimr for the data quality testing.
+***source: Kaggle.com***
+***file name: Telco-Customer_Churn.csv***
+***reponse variable: Churn {binary: Yes/No}***
 
-Step 1: import the source data file:
+My Rstudio session info is shown below as a benchmark for this demo:
 
-Ingest the source data to RStudio and start working on it.
+<img width="781" alt="image" src="https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/7a8f1dd9-31c2-4ac8-838b-1bf3bf0284ad">
+
+## Road map for this demo
+### step 1 import the source data file
+### step 2 explore the data set
+### step 3 develop an exploratory correlation funel model
+### step 4 potential predictor feature selection
+### step 5 adjust reponse variable for class imbalance
+### step 6 build an intial tree learning model
+### step 7 build a distributed random forest (DRF) model and a gradient boosting machine (GBM) model
+### step 8 evaluate the results
+### step 9 start the modeling process
+
+--------------------------------------------------
+
+### step 1 import data file
+
+Validate that the input file dimensions 7,032 X 20 match the source data file. Note that 'seniorcitizen' is converted to a factor along with all other 'chr' data. 
+There were no data quality issues noted - I used skimr for the data quality testing.
+
+The first step is to import the source data to RStudio and start working on it.
 
 ```
 #load the needed libs:
@@ -51,13 +71,16 @@ skimr::skim(cust_churn)
 #produce a summary of the data set
 summary(cust_churn)
 ```
+
 The initial data types and other info:
 ![image](https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/21a3a75c-1065-4414-b197-8af40bc5a02a)
 
 Produce a summary of the source data set:
 <img width="734" alt="image" src="https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/7033ec51-9fd3-47de-a481-049e16ecaa0d">
 
-Step 2: Explore the data set
+--------------------------------------------------------------------------------
+
+### Step 2 explore the data set
 
 The first thing to do is to look for class imbalance in the response variable:
 ```
@@ -148,7 +171,9 @@ kruskal.test(totalcharges ~ deviceprotection,
 The idea with this test is that if the mean ranks are statistically significantly different between the groups (categorical variables) for the numeric
 variables then the correlation between the variables is strong and should be considered for potential removal due to multicolinearity concerns. Note that categorical data does not 100% meet the underlying data assumption for a Kruskal test, I am considering this to be an acceptable'off-label' usage for this test.
 
-Step 3: develop an exploratory correlation funel model
+-----------------------------------------------------------------------------------------------------------
+
+### Step 3 develop an exploratory correlation funel model
 
 Develop a correlation funnel plot to see which predictors and which levels within the predictors are best to use for predicting the churn response variable.
 
@@ -219,7 +244,9 @@ The results are below. churn 'Yes' = 1 and churn 'No' = 0. From this plot I can 
 
 ![image](https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/bba5760c-0c75-4035-b3a9-c193a37d0979)
 
-Step 4: Potential predictor feature selection
+--------------------------------------------------------------------------------------------------
+
+### Step 4 potential predictor feature selection
 
 For this step, I use the Boruta library to help identify more potent predictors from less potent ones.
 
@@ -274,8 +301,9 @@ The Boruta output is below. From this plot, I am able to see that the most likel
 
 ![image](https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/77e82305-5a4b-43b8-b5aa-564ddd894a76)
 
+---------------------------------------------------------------------------------------------------------------------------
 
-Step 5: adjust reponse variable for class imbalance and use this adjusted data set for the exploratory models
+### Step 5 adjust reponse variable for class imbalance
 
 The first thing that I do is use a 70/30 split for training and testing data sets. From there, I used ROSE oversampling to get the response variable class balance closer to a 50/50 mix so the models will be more effective. However, note that the models will predict using the test set which has not been adjusted for the imbalance. This process will be a good test of how effective a prediction model will be when it used data from the wild to process. 
 
@@ -331,7 +359,9 @@ The output of the oversampling for the training set and confirmation that the te
 
 <img width="342" alt="image" src="https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/4db56a7f-ff7f-4146-ae31-3ec1bc9eedaf">
 
-Step 6 - build an intial tree learning model and review the output
+-----------------------------------------------------------------------------------------------------------------------
+
+### Step 6 build an intial tree learning model
 
 Build the initial tree model using caret and set up a 10 fold cross validation train control. 
 
@@ -444,8 +474,9 @@ print(f2_score)
 
 <img width="437" alt="image" src="https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/042d1792-6b3b-4d44-a9ce-3a0eb24431a0">
 
+---------------------------------------------------------------------------------------------------------------------------------
 
-Step 7 - build a distributed random forest (DRF) model and a gradient boosting machine (GBM) model.
+### Step 7 build a distributed random forest (DRF) model and a gradient boosting machine (GBM) model
 
 In general, these models are more complicated than a tree learning model. Also I am using the H2O platform to develop these models. The first section of this code for H2O is around house keeping and setting up the H2O cluster:
 
@@ -670,13 +701,18 @@ h2o::h2o.shutdown(prompt = FALSE) #shut down the h2o cluster
 h2o::h2o.removeAll() #remove the cluster
 ```
 
-Step 8 - Evaluate the results
+----------------------------------------------------------------------------------------------------------
+
+### Step 8 Evaluate the results
 
 The last step in this EDA is to compare the results from the three models. They are shown below. With this being an exploratory project, the actual best predictors are not known at this point. One way to start to down select the predictors is to see which ones are common between the models (color coded in the table below) in a sort of voting type analysis. Also, since the DRF model had the best results of the three, then more weight would be given to these predictors. 
 				
 ![image](https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/0950b465-9bed-4d9a-a3f6-6ad5bf7104be)
 
-Step 9 - Start the modeling process
+
+---------------------------------------------------------------------------------------------------------------
+
+### Step 9 Start the modeling process
 
 Since we now have a good idea of how these variables interact with each other, the class imbalance of the response variable, and the effectiveness of the three selected models, the real work begins. This exploratory work would inform the initial direction for the modeling activities and course corrections would be made along the way. 
 
