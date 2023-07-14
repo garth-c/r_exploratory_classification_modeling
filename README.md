@@ -18,19 +18,19 @@ My Rstudio session info is shown below as a benchmark for this demo:
 <img width="781" alt="image" src="https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/7a8f1dd9-31c2-4ac8-838b-1bf3bf0284ad">
 
 # Road map for this demo
-## step 1 import the source data file
-## step 2 explore the data set
-## step 3 develop an exploratory correlation funel model
-## step 4 potential predictor feature selection
-## step 5 adjust reponse variable for class imbalance
-## step 6 build an intial tree learning model
-## step 7 build H2O models
-## step 8 evaluate the results
-## step 9 start the modeling process
+## Step 1 import the source data file
+## Step 2 explore the data set
+## Step 3 develop an exploratory correlation funel model
+## Step 4 potential predictor feature selection
+## Step 5 adjust reponse variable for class imbalance
+## Step 6 build an intial tree learning model
+## Step 7 build H2O models
+## Step 8 evaluate the results
+## Step 9 start the modeling process
 
 --------------------------------------------------
 
-## step 1 import the source data file
+## Step 1 import the source data file
 
 Validate that the input file dimensions [7,032 X 20] match the source data file. Note that 'seniorcitizen' is converted to a factor along with all other 'chr' data. 
 There were no data quality issues noted - I used skimr for the data quality testing.
