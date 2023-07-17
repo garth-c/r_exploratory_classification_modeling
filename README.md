@@ -1,8 +1,5 @@
 # Exploratory classification modeling using R
 
-### Go back to my profile page
-[garth-c profile page] (https://github.com/garth-c)
-
 ## Project Description
 The objective of this brief demo is to explore a subset of a customer churn data from Kaggle.com to identify potentially effective predictor variables as well as explore relationship between the predictor variable data. Since this data was already put together in the same file by Kaggle.com, my base assumption is that the predictor variables are reasonably valid predictors for the response variable. Thus, the goal of this exercise is to validate this assumption. A description of the variables used in this demo is below. 
 
@@ -32,6 +29,11 @@ My Rstudio session info is shown below as a benchmark for this demo:
 ## start the modeling process
 
 --------------------------------------------------
+
+### Go back to my profile page
+[garth-c profile page] (https://github.com/garth-c)
+
+-----------------------------------------------------------------
 
 ## import the source data file
 
@@ -742,6 +744,8 @@ Since we now have a good idea of how these variables interact with each other, t
 The main activities to now consider are data transformations (if needed), removal of noise from the predictor variables, feature engineering, data acquisition of new and more effective predictor variables if they are available, reconsidering the need for oversampling to compensate for the response variable class imbalance, and finally other more effective models to use for this data.
 
 Thanks for reading this!
+
+--------------------------------------------------------------------------------------
 
 ### Go back to my profile page
 [garth-c profile page] (https://github.com/garth-c)
