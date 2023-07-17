@@ -1,7 +1,7 @@
 # Exploratory classification modeling using R
 
 ## Project Description
-The objective of this brief demo is to explore a subset of a customer churn data from Kaggle.com to identify potentially effective predictor variables as well as explore relationship between the predictor data. Since this data was already put together in the same file by Kaggle.com, my base assumption is that the predictor variables are reasonably valid predictors for the response variable. Thus, the goal of this exercise is to validate this assumption. A description of the variables used in this demo is below. 
+The objective of this brief demo is to explore a subset of a customer churn data from Kaggle.com to identify potentially effective predictor variables as well as explore relationship between the predictor variable data. Since this data was already put together in the same file by Kaggle.com, my base assumption is that the predictor variables are reasonably valid predictors for the response variable. Thus, the goal of this exercise is to validate this assumption. A description of the variables used in this demo is below. 
 
 ![image](https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/b4f3d514-ccaf-46e8-ba0e-a8c794320da3)
 
@@ -18,22 +18,21 @@ My Rstudio session info is shown below as a benchmark for this demo:
 <img width="781" alt="image" src="https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/7a8f1dd9-31c2-4ac8-838b-1bf3bf0284ad">
 
 # Road map for this demo
-## Step 1 import the source data file
-## Step 2 explore the data set
-## Step 3 develop an exploratory correlation funel model
-## Step 4 potential predictor feature selection
-## Step 5 adjust reponse variable for class imbalance
-## Step 6 build an intial tree learning model
-## Step 7 build H2O models
-## Step 8 evaluate the results
-## Step 9 start the modeling process
+## import the source data file
+## explore the data set
+## develop an exploratory correlation funel model
+## potential predictor feature selection
+## adjust reponse variable for class imbalance
+## build an intial tree learning model
+## build H2O models
+## evaluate the results
+## start the modeling process
 
 --------------------------------------------------
 
-## Step 1 import the source data file
+## import the source data file
 
-Validate that the input file dimensions [7,032 X 20] match the source data file. Note that 'seniorcitizen' is converted to a factor along with all other 'chr' data. 
-There were no data quality issues noted - I used skimr for the data quality testing.
+Validate that the input file dimensions [7,032 X 20] match the source data file. Note that the 'seniorcitizen' variable is converted to a factor along with all other 'chr' data. There were no data quality issues noted - I used the skimr library for the data quality assessment.
 
 The first step is to import the source data to RStudio and start working on it.
 
@@ -78,13 +77,13 @@ The initial data types and other info:
 
 ![image](https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/21a3a75c-1065-4414-b197-8af40bc5a02a)
 
-Produce a summary of the source data set:
+Next, produce a summary of the source data set:
 
 <img width="734" alt="image" src="https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/7033ec51-9fd3-47de-a481-049e16ecaa0d">
 
 --------------------------------------------------------------------------------
 
-### Step 2 explore the data set
+### explore the data set
 
 The first thing to do is to look for class imbalance in the response variable:
 
@@ -101,7 +100,7 @@ prop.table(table(cust_churn$churn))
 ```
 
 There is a roughly 73% to 27% split between the 'Yes' and 'No' values for churn which is imbalanced. With such an imbalance, I will explore oversamling techniques
-such as ROSE.
+such as ROSE (random over sampling examples).
 
 This is the specific response variable percentage split:
 
@@ -111,8 +110,7 @@ This is a bar chart showing the magnitude of the split:
 
 ![image](https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/6b315545-dc11-47e8-8b81-c6c22f60584c)
 
-The next task is to explore the numeric data for correlations. It looks like 'tenure' is definitely correlated to 'totalcharges' but the other numeric values are not
-very correlated. This correlation situation may result in removing either 'tenure' or 'totalcharges' in order to avoid any multicollinearity issues in the model. Multicollinearity in a model tends to artificially inflate the importance of some predictor variables beyond their actual influence on the response variable. 
+The next task is to explore the numeric data for correlations. It looks like 'tenure' is definitely correlated to 'totalcharges' and the other numeric values are not very correlated. This correlation situation may result in removing either 'tenure' or 'totalcharges' in order to avoid any multicollinearity issues in the model. Multicollinearity in a model tends to artificially inflate the importance of some predictor variables beyond their actual influence on the response variable. 
 
 ```
 #put numeric values into a holding data frame
@@ -131,12 +129,11 @@ boxplot(numerics)
 
 ![image](https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/5546e290-e998-461c-bc94-4c91746a28f5)
 
-Looking for outliers in the numeric values shows that only 'totalcharges' has any amount of spread and possible outliers:
+Looking for outliers in the numeric values shows that only 'totalcharges' has any amount of significant data spread with possible outliers:
 
 ![image](https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/d3adbc96-f915-4170-b2aa-d01e88075bb7)
 
-The next task is to explore the categorical data potential association with a Cramer's V function. For this example, I compared the predictors: 'contract'
-to 'paymentmethod' to see if there was any significant association with the same concern of potential multicollinearity.
+The next task is to explore the categorical to categorical data potential associations with a Cramer's V function. As an example, I compared the predictors: 'contract' to 'paymentmethod' to see if there was any significant association with the same concern of potential multicollinearity.
 
 ```
 #use cramer's V for the test of association between suspect variables
@@ -144,13 +141,17 @@ rcompanion::cramerV(x = cust_churn$contract,
                     y = cust_churn$paymentmethod)
 ```
 
-The Cramer's V metric = 0.2667. Since Cramer's V measures association between 0 and 1 (similar to a correlation coefficient), this result is not large enough to be concerned with. All of the potential categorical to categorical associations in this data set were tested and only a few were found to be somewhat strong. I will wait to complete the EDA portion before removing highly associated predictor variables. Below is a interpretation chart for Cramer's V metrics to add the needed context:
+The Cramer's V metric = 0.2667. Since Cramer's V measures association between 0 and 1 (similar to a correlation coefficient), this result is not large enough to be concerned with. All of the potential categorical to categorical associations in this data set were tested and only a few were found to be somewhat strong. I will wait to complete the EDA part of this project before determining if removing highly associated predictor variables is appropriate for this project. 
+
+
+Below is a interpretation chart for Cramer's V metrics to add the needed context:
 
 <img width="866" alt="image" src="https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/ecb0b76e-2370-4379-9449-099d3b0004f1">
 
-The advantage of using Cramer's V for this is it adjusts the Chi-Square results for the sample size and then scales the output to an easily interpretable value between zero and one. Thus, it measures the effect size for Chi-Square results. 
+The advantage of using Cramer's V for this is it adjusts the Chi-Square results for the sample size and then scales the output to an easily interpretable value between zero and one. Overall, it is an excellent measurement tool of the effect size for Chi-Square results. 
 
-The next task is to explore the potential numeric to categorical associations for potential multicolinearity. For this demo, I selected a few notional variables that I thought would be good examples of highly correlated variables in this grouping. One such example is shown below. 
+The next task is to explore the potential numeric to categorical associations for potential multicolinearity. The idea with this method is that if the mean ranks for the numeric variables are statistically significantly different between the groups (categorical variables) then the correlation between the variables is strong and should be considered for potential removal due to multicolinearity concerns. Note that categorical data does not 100% meet the underlying data assumption for a Kruskal test, but I am considering this to be an acceptable'off-label' usage for this test. As an example, I selected a few notional variables that I thought would be good examples of highly correlated variables in this area. One such example is shown below.
+
 
 ```
 #boxplot to visualize the relationship by group
@@ -175,12 +176,11 @@ kruskal.test(totalcharges ~ deviceprotection,
              data = cust_churn)
 ```
 
-The idea with this method is that if the mean ranks are statistically significantly different between the groups (categorical variables) for the numeric
-variables then the correlation between the variables is strong and should be considered for potential removal due to multicolinearity concerns. Note that categorical data does not 100% meet the underlying data assumption for a Kruskal test, I am considering this to be an acceptable'off-label' usage for this test.
+
 
 -----------------------------------------------------------------------------------------------------------
 
-### Step 3 develop an exploratory correlation funel model
+### develop an exploratory correlation funel model
 
 Develop a correlation funnel plot to see which predictors and which levels within the predictors are best to use for predicting the churn response variable.
 
@@ -246,14 +246,14 @@ termed_ml_funnel %>% correlationfunnel::correlate(target = churn__1) %>%
                                                             color = '#2c3e50')
 ```
 
-The results are below. churn 'Yes' = 1 and churn 'No' = 0. From this plot I can see that the predictors contract and online security are good candidate predictors for the final model. Specifically for contract, it looks like the factor level 'Month_to_month' is more associated with 'No' churn and 'Two_year' is more associated with 'Yes' churn. The rest of the predictors are roughly interpreted in the same way. The business value for this plot is high and various course corrections are able to made depending on the context of the decisionaround customer churn being made.
+The results are below: note that churn 'Yes' = 1 and churn 'No' = 0. From this plot I can see that the predictors 'contract' and 'online security' are good candidate predictors for the final model. Specifically for 'contract', it looks like the factor level 'Month_to_month' is more associated with 'No' churn and 'Two_year' is more associated with 'Yes' churn. The rest of the predictors are roughly interpreted in the same way. The business value for this plot is high and various business course corrections are able to made depending on the context of the decisions being made around customer churn being made.
 
 
 ![image](https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/bba5760c-0c75-4035-b3a9-c193a37d0979)
 
 --------------------------------------------------------------------------------------------------
 
-### Step 4 potential predictor feature selection
+### potential predictor feature selection
 
 For this step, I use the Boruta library to help identify more potent predictors from less potent ones.
 
@@ -308,11 +308,17 @@ The Boruta output is below. From this plot, I am able to see that the most likel
 
 ![image](https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/77e82305-5a4b-43b8-b5aa-564ddd894a76)
 
+
+This plot will help inform the final modeling process as to which predictor variables are most likely the best ones to use. 
+
 ---------------------------------------------------------------------------------------------------------------------------
 
-### Step 5 adjust reponse variable for class imbalance
+### adjust reponse variable for class imbalance
 
-The first thing that I do is use a 70/30 split for training and testing data sets. From there, I used ROSE oversampling to get the response variable class balance closer to a 50/50 mix so the models will be more effective. However, note that the models will predict using the test set which has not been adjusted for the imbalance. This process will be a good test of how effective a prediction model will be when it used data from the wild to process. 
+Since this data set has class imbalance with the response variable, making adjustments to the data set is one tactic to use in the modeling process. There are multiple methods available to do this such as ROSE, SMOTE (synthetic minority oversampling technique), general over/under sampling, cost sensitive learning, Tomek Links, using a differnt performance metrics, etc. If one of the synthetic data generator techniques adds a factor level combination outside of the factor levels from your data set, the model may throw an error. This is because a specific combination of factor levels in the test set may not have been included in the train set and the model didn't train on it and now it doesn't know how to handle such a combination. If this happens, the the easiest way to handle this is to make a copy of the problematic records and make sure a copy of it is in both data sets. Another way to avoid this situation is to split the data between train and test first and then only adjust the train set for the class imbalance. This isn't 100% fool proof, but it does mitigate this risk down to a very low level.  
+
+
+The next thing that I do is use a 70/30 split for training and testing data sets. From there, I used ROSE oversampling to get the response variable class balance closer to a 50/50 mix so the models will be more effective. However, note that the models will predict using the test set which has not been adjusted for the imbalance. This process will be a good test of how effective a prediction model will be when it used data from the wild to process. 
 
 ```
 #set the environmentals
@@ -366,9 +372,11 @@ The output of the oversampling for the training set and confirmation that the te
 
 <img width="342" alt="image" src="https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/4db56a7f-ff7f-4146-ae31-3ec1bc9eedaf">
 
+Now that the train set has been adjusted, it is time to build the exploratory models. 
+
 -----------------------------------------------------------------------------------------------------------------------
 
-### Step 6 build an intial tree learning model
+### build an intial tree learning model
 
 Build the initial tree model using caret and set up a 10 fold cross validation train control. 
 
@@ -455,8 +463,8 @@ confusionMatrix(data = predictions_tm,
 
 <img width="278" alt="image" src="https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/c9bde9f4-af30-44a8-8107-4cd142c52720">
 
-Since the response variable is imbalanced, focusing on correct Yes churn predictions alone is not enough to compare models. Since the main concerns
-from a business perspective would be false positives (model predicts churn = No but the customer actually churns), the calculating the F2 score
+Since the response variable is imbalanced, focusing on correct 'Yes' churn predictions alone is not enough to compare models. The main concerns
+from a business perspective would be false negatives (model predicts churn = Yes but the customer actually doesn't churn), the calculating the F2 score
 is a good comparative metric between models. 
 
 ```
@@ -483,11 +491,9 @@ print(f2_score)
 
 ---------------------------------------------------------------------------------------------------------------------------------
 
-### Step 7 H2O models
+### H2O models
 
-Build a distributed random forest (DRF) model and a gradient boosting machine (GBM) model
-
-In general, these models are more complicated than a tree learning model. These are also exploratory models so little effort was put into thier configuration. Also I am using the H2O platform to develop these models which adds some complexity with the cluster set up process. 
+This section build more sophisticated models than the last secion. I will now build a distributed random forest (DRF) model and a gradient boosting machine (GBM) model. In general, these models are more complicated than a tree learning model. These are also exploratory models so little effort was put into thier configuration. Also, I am using the H2O platform to develop these models which adds some complexity with the cluster set up process. 
 
 The first section of this code for H2O is around house keeping and setting up the H2O cluster:
 
@@ -717,7 +723,7 @@ h2o::h2o.removeAll() #remove the cluster
 
 ----------------------------------------------------------------------------------------------------------
 
-### Step 8 Evaluate the results
+### evaluate the results
 
 The last step in this EDA is to compare the results from the three models. They are shown below. With this being an exploratory project, the actual best predictors are not known at this point. One way to start to down select the predictors is to see which ones are common between the models (color coded in the table below) in a sort of voting type analysis. Also, since the DRF model had the best results of the three, then more weight would be given to these predictors. 
 				
@@ -726,9 +732,9 @@ The last step in this EDA is to compare the results from the three models. They 
 
 ---------------------------------------------------------------------------------------------------------------
 
-### Step 9 Start the modeling process
+### start the modeling process
 
-Since we now have a good idea of how these variables interact with each other, the class imbalance of the response variable, and the effectiveness of the three selected models, the real work begins. This exploratory work would inform the initial direction for the modeling activities and course corrections would be made along the way. 
+Since we now have a good idea of how these variables interact with each other, the class imbalance of the response variable, and the effectiveness of the three selected models, the real work begins. This exploratory work will inform the initial direction for the modeling activities and course corrections would be made along the way. 
 
 The main activities to now consider are data transformations (if needed), removal of noise from the predictor variables, feature engineering, data acquisition of new and more effective predictor variables if they are available, reconsidering the need for oversampling to compensate for the response variable class imbalance, and finally other more effective models to use for this data.
 
