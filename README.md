@@ -20,15 +20,15 @@ My Rstudio session info is shown below as a benchmark for this demo:
 ----------------------------------------------------------------------------
 
 # Road map for this demo
-## import the source data file
-## explore the data set
-## develop an exploratory correlation funel model
-## potential predictor feature selection
-## adjust reponse variable for class imbalance
-## build an intial tree learning model
-## build H2O models
-## evaluate the results
-## start the modeling process
++ import the source data file
++ explore the data set
++ develop an exploratory correlation funel model
++ potential predictor feature selection
++ adjust reponse variable for class imbalance
++ build an intial tree learning model
++ build H2O models
++ evaluate the results
++ start the modeling process
 
 --------------------------------------------------
 
@@ -39,7 +39,7 @@ My Rstudio session info is shown below as a benchmark for this demo:
 
 ## import the source data file
 
-Validate that the input file dimensions [7,032 X 20] match the source data file. Note that the 'seniorcitizen' variable is converted to a factor along with all other 'chr' data. There were no data quality issues noted - I used the skimr library for the data quality assessment. No other data prep was needed for this demo project. 
+Validate that the input file dimensions [7,032 X 20] match the source data file. Note that the 'seniorcitizen' variable is converted to a factor along with all other 'chr' data. There were no data quality issues noted - I used the skimr library for the data quality assessment. No other data prep was needed for this demo project and there was no missing data. 
 
 The first step is to import the source data to RStudio and start working on it.
 
