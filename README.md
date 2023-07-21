@@ -17,6 +17,8 @@ My Rstudio session info is shown below as a benchmark for this demo:
 
 <img width="781" alt="image" src="https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/7a8f1dd9-31c2-4ac8-838b-1bf3bf0284ad">
 
+----------------------------------------------------------------------------
+
 # Road map for this demo
 ## import the source data file
 ## explore the data set
@@ -37,7 +39,7 @@ My Rstudio session info is shown below as a benchmark for this demo:
 
 ## import the source data file
 
-Validate that the input file dimensions [7,032 X 20] match the source data file. Note that the 'seniorcitizen' variable is converted to a factor along with all other 'chr' data. There were no data quality issues noted - I used the skimr library for the data quality assessment.
+Validate that the input file dimensions [7,032 X 20] match the source data file. Note that the 'seniorcitizen' variable is converted to a factor along with all other 'chr' data. There were no data quality issues noted - I used the skimr library for the data quality assessment. No other data prep was needed for this demo project. 
 
 The first step is to import the source data to RStudio and start working on it.
 
