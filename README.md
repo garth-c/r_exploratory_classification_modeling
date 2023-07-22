@@ -1,7 +1,9 @@
 # Exploratory classification modeling using R
 
 ## Project Description
-The objective of this brief demo is to explore a subset of a customer churn data from Kaggle.com to identify potentially effective predictor variables as well as explore relationship between the predictor variable data. Since this data was already put together in the same file by Kaggle.com, my base assumption is that the predictor variables are reasonably valid predictors for the response variable. Thus, the goal of this exercise is to validate this assumption. A description of the variables used in this demo is below. 
+In this binary classification project, I dive deep into the world of machine learning with a focus on solving problems with two distinct outcomes - henc: binary. Using the R programming language, I explore various supervised learning algorithms tailored for binary classification tasks. The main goal is to accurately predict one of the two possible classes based on a set of input features.
+
+The specific objective of this brief demo is to explore a subset of a customer churn data from Kaggle.com to identify potentially effective predictor variables as well as explore relationship between the predictor variable data. Since this data was already put together in the same file by Kaggle.com, my base assumption is that the predictor variables are reasonably valid predictors for the response variable. Thus, the goal of this exercise is to validate this assumption. A description of the variables used in this demo is below. 
 
 ![image](https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/b4f3d514-ccaf-46e8-ba0e-a8c794320da3)
 
