@@ -1,9 +1,13 @@
 # Exploratory classification modeling using R
 
 ## Project Description
-In this binary classification project, I dive deep into the world of machine learning with a focus on solving problems with two distinct outcomes - henc: binary. Using the R programming language, I explore various supervised learning algorithms tailored for binary classification tasks. The main goal is to accurately predict one of the two possible classes based on a set of input features.
 
-The specific objective of this brief demo is to explore a subset of a customer churn data from Kaggle.com to identify potentially effective predictor variables as well as explore relationship between the predictor variable data. Since this data was already put together in the same file by Kaggle.com, my base assumption is that the predictor variables are reasonably valid predictors for the response variable. Thus, the goal of this exercise is to validate this assumption. A description of the variables used in this demo is below. 
+Business Objective:
+To classify customer data into one of two groups for the specific purpose of label prediction: churn or not churn. Once the model is built, apply it to new customer data that is obtained to generate this same prediction label. 
+
+For this demo, I dive deeper into the world of machine learning with a focus on predicting two distinct outcomes - hence: binary. Using the R programming language, I explore various supervised learning algorithms tailored for binary classification tasks. From a machine learning perspective, the main goal is to accurately predict one of the two possible classes based on a set of input features.
+
+As part of this demo, I will explore the predictor variables and the nature of the relationship with the response variable data. Since this data was already put together in the same file by Kaggle.com, my base assumption is that the predictor variables are reasonably valid predictors for the response variable. Thus, the goal of this exercise is to validate this assumption. A description of the variables used in this demo is below. 
 
 ![image](https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/b4f3d514-ccaf-46e8-ba0e-a8c794320da3)
 
@@ -13,7 +17,7 @@ The source data description is:
 
 + file name: Telco-Customer_Churn.csv
 
-+ reponse variable: Churn binary: Yes/No
++ reponse variable: Churn {binary}: Yes/No
 
 My Rstudio session info is shown below as a benchmark for this demo:
 
@@ -41,7 +45,10 @@ My Rstudio session info is shown below as a benchmark for this demo:
 
 ## import the source data file
 
-Validate that the input file dimensions [7,032 X 20] match the source data file. Note that the 'seniorcitizen' variable is converted to a factor along with all other 'chr' data. There were no data quality issues noted - I used the skimr library for the data quality assessment. No other data prep was needed for this demo project and there was no missing data. 
+Validate that the input file dimensions [7,032 X 20] match the source data file. 
+- Note that the 'seniorcitizen' variable is converted to a factor along with all other character data type variables
+- There were no data quality issues noted - I used the skimr library for the data quality assessment
+- No other data prep was needed for this demo project and there was no missing data
 
 The first step is to import the source data to RStudio and start working on it.
 
@@ -119,7 +126,9 @@ This is a bar chart showing the magnitude of the split:
 
 ![image](https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/6b315545-dc11-47e8-8b81-c6c22f60584c)
 
-The next task is to explore the numeric data for correlations. It looks like 'tenure' is definitely correlated to 'totalcharges' and the other numeric values are not very correlated. This correlation situation may result in removing either 'tenure' or 'totalcharges' in order to avoid any multicollinearity issues in the model. Multicollinearity in a model tends to artificially inflate the importance of some predictor variables beyond their actual influence on the response variable. 
+The next task is to explore the numeric data for correlations. It looks like 'tenure' is definitely correlated to 'totalcharges' and the other numeric values are not very correlated. This correlation situation may result in removing either 'tenure' or 'totalcharges' in order to avoid any multicollinearity issues in the model. 
+- Note that multicollinearity in a model tends to artificially inflate the importance of some predictor variables beyond their actual influence on the response variable
+  - multicollinearity in the predictor data is something that we want to avoid if possible
 
 ```
 #put numeric values into a holding data frame
@@ -159,7 +168,9 @@ Below is a interpretation chart for Cramer's V metrics to add the needed context
 
 The advantage of using Cramer's V for this is it adjusts the Chi-Square results for the sample size and then scales the output to an easily interpretable value between zero and one. Overall, it is an excellent measurement tool of the effect size for Chi-Square results. 
 
-The next task is to explore the potential numeric to categorical associations for potential multicolinearity. The idea with this method is that if the mean ranks for the numeric variables are statistically significantly different between the groups (categorical variables) then the correlation between the variables is strong and should be considered for potential removal due to multicolinearity concerns. Note that categorical data does not 100% meet the underlying data assumption for a Kruskal test, but I am considering this to be an acceptable'off-label' usage for this test. As an example, I selected a few notional variables that I thought would be good examples of highly correlated variables in this area. One such example is shown below.
+The next task is to explore the potential numeric to categorical associations for potential multicolinearity. The idea with this method is that if the mean ranks for the numeric variables are statistically significantly different between the groups (categorical variables) then the correlation between the variables is strong and should be considered for potential removal due to multicolinearity concerns. 
+- Note that categorical data does not 100% meet the underlying data assumption for a Kruskal test, but I am considering this to be an acceptable'off-label' usage for this test.
+- As an example, I selected a few notional variables that I thought would be good examples of highly correlated variables in this area. One such example is shown below:
 
 
 ```
@@ -255,7 +266,12 @@ termed_ml_funnel %>% correlationfunnel::correlate(target = churn__1) %>%
                                                             color = '#2c3e50')
 ```
 
-The results are below: note that churn 'Yes' = 1 and churn 'No' = 0. From this plot I can see that the predictors 'contract' and 'online security' are good candidate predictors for the final model. Specifically for 'contract', it looks like the factor level 'Month_to_month' is more associated with 'No' churn and 'Two_year' is more associated with 'Yes' churn. The rest of the predictors are roughly interpreted in the same way. The business value for this plot is high and various business course corrections are able to made depending on the context of the decisions being made around customer churn being made.
+The results are below: note that churn 'Yes' = 1 and churn 'No' = 0 
+- From this plot I can see that the predictors 'contract' and 'online security' are good candidate predictors for the final model
+- Specifically for 'contract', it looks like the factor level 'Month_to_month' is more associated with 'No' churn and 'Two_year' is more associated with 'Yes' churn
+- The rest of the predictors are roughly interpreted in the same way
+
+The business value for this plot is high and various business course corrections are able to made depending on the context of the decisions being made around customer churn being made.
 
 
 ![image](https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/bba5760c-0c75-4035-b3a9-c193a37d0979)
@@ -313,7 +329,7 @@ print(rough_fixes)
 rough_fixes_df <- as.data.frame(attStats(rough_fixes))
 ```
 
-The Boruta output is below. From this plot, I am able to see that the most likely best predictors in green are: tenure, totalcharges, monthlycharges, and contract. The other predictors don't seem to be very strong and/or rely on multicollinearity for predictive power
+The Boruta output is below. From this plot, I am able to see that the most likely best predictors in green are: tenure, totalcharges, monthlycharges, and contract. The other predictors don't seem to be very strong and/or rely on multicollinearity for their predictive power.
 
 ![image](https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/77e82305-5a4b-43b8-b5aa-564ddd894a76)
 
@@ -324,7 +340,9 @@ This plot will help inform the final modeling process as to which predictor vari
 
 ### adjust reponse variable for class imbalance
 
-Since this data set has class imbalance with the response variable, making adjustments to the data set is one tactic to use in the modeling process. There are multiple methods available to do this such as ROSE, SMOTE (synthetic minority oversampling technique), general over/under sampling, cost sensitive learning, Tomek Links, using a differnt performance metrics, etc. If one of the synthetic data generator techniques adds a factor level combination outside of the factor levels from your data set, the model may throw an error. This is because a specific combination of factor levels in the test set may not have been included in the train set and the model didn't train on it and now it doesn't know how to handle such a combination. If this happens, the the easiest way to handle this is to make a copy of the problematic records and make sure a copy of it is in both data sets. Another way to avoid this situation is to split the data between train and test first and then only adjust the train set for the class imbalance. This isn't 100% fool proof, but it does mitigate this risk down to a very low level.  
+Since this data set has class imbalance with the response variable, making adjustments to the data set is one tactic to use in the modeling process. There are multiple methods available to do this such as ROSE, SMOTE (synthetic minority oversampling technique), general over/under sampling, cost sensitive learning, Tomek Links, using a differnt performance metrics, etc. 
+
+A note of caution: if one of the synthetic data generator techniques adds a factor level combination outside of the factor levels from your data set, the model may throw an error. This is because a specific combination of factor levels in the test set may not have been included in the train set and the model didn't train on it and now it doesn't know how to handle such a combination. If this happens, the the easiest way to handle this is to make a copy of the problematic records and make sure a copy of it is in both data sets. Another way to avoid this situation is to split the data between train and test first and then only adjust the train set for the class imbalance. This isn't 100% fool proof, but it does mitigate this risk down to a very low level.  
 
 
 The next thing that I do is use a 70/30 split for training and testing data sets. From there, I used ROSE oversampling to get the response variable class balance closer to a 50/50 mix so the models will be more effective. However, note that the models will predict using the test set which has not been adjusted for the imbalance. This process will be a good test of how effective a prediction model will be when it used data from the wild to process. 
@@ -440,7 +458,7 @@ fancyRpartPlot(tree_model$finalModel)
 
 ![image](https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/c0d3f88e-6d27-4a32-b8cc-de059e746898)
 
-The top 5 predictor variables VIF plot is below. This plot shows the specific factor levels for each predictor variable that has the mode influence on the response variable.
+The top 5 predictor variables VIF (variable importance factor) plot is below. This plot shows the specific factor levels for each predictor variable that has the mode influence on the response variable.
 
 ```
 #display the most important variables
@@ -502,7 +520,7 @@ print(f2_score)
 
 ### H2O models
 
-This section build more sophisticated models than the last secion. I will now build a distributed random forest (DRF) model and a gradient boosting machine (GBM) model. In general, these models are more complicated than a tree learning model. These are also exploratory models so little effort was put into thier configuration. Also, I am using the H2O platform to develop these models which adds some complexity with the cluster set up process. 
+This section build more sophisticated models than the last secion. I will now build a distributed random forest (DRF) model and a gradient boosting machine (GBM) model. In general, these models are more complicated than a tree learning model. These are also exploratory models so minimal effort was put into thier configuration. Also, I am using the H2O platform to develop these models which adds some complexity with the computing cluster set up process. 
 
 The first section of this code for H2O is around house keeping and setting up the H2O cluster:
 
@@ -618,7 +636,7 @@ h2o::h2o.varimp_plot(rf_h2o,
 
 ![image](https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/2cd6fb18-133e-440a-aa8b-c19a311d1289)
 
-The resulting confusion matrix for the DRF model is below. The 'Yes' churn accuracy is ~50% (454/(454+448)) which is an imporovement over the tree model. This model also correctly predicted 'Yes' for churn more that it got wrong. 
+The resulting confusion matrix for the DRF model is below. The 'Yes' churn accuracy is ~50% (454/(454+448)) which is an imporovement over the tree model. This model also correctly predicted 'Yes' for churn more that it got wrong - which is a desirable outcome. 
 
 <img width="281" alt="image" src="https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/fd7cd077-e64c-4395-9230-36ff027adc1c">
 
