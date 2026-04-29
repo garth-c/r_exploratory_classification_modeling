@@ -17,7 +17,7 @@ The source data description is:
 
 + file name: Telco-Customer_Churn.csv
 
-+ reponse variable: Churn {binary}: Yes/No
++ response variable: Churn {binary}: Yes/No
 
 My Rstudio session info is shown below as a benchmark for this demo:
 
@@ -28,10 +28,10 @@ My Rstudio session info is shown below as a benchmark for this demo:
 # Road map for this demo
 + import the source data file
 + explore the data set
-+ develop an exploratory correlation funel model
++ develop an exploratory correlation funnel model
 + potential predictor feature selection
-+ adjust reponse variable for class imbalance
-+ build an intial tree learning model
++ adjust response variable for class imbalance
++ build an initial tree learning model
 + build H2O models
 + evaluate the results
 + start the modeling process
@@ -45,7 +45,7 @@ A[Import source data file] --> B[Explore the data set];
     E --> F[Build initial tree learning model];
     F --> G[Build H2O models];
     G --> H[Evaluate the results];
-    H --> I[Start the modeling process];
+    H --> I[Start the final modeling process];
 ```
 
 --------------------------------------------------
@@ -127,7 +127,7 @@ ggplot(cust_churn) +
 prop.table(table(cust_churn$churn))
 ```
 
-There is a roughly 73% to 27% split between the 'Yes' and 'No' values for churn which is imbalanced. With such an imbalance, I will explore oversamling techniques
+There is a roughly 73% to 27% split between the 'Yes' and 'No' values for churn which is imbalanced. With such an imbalance, I will explore oversampling techniques
 such as ROSE (random over sampling examples).
 
 This is the specific response variable percentage split:
@@ -174,7 +174,7 @@ rcompanion::cramerV(x = cust_churn$contract,
 The Cramer's V metric = 0.2667. Since Cramer's V measures association between 0 and 1 (similar to a correlation coefficient), this result is not large enough to be concerned with. All of the potential categorical to categorical associations in this data set were tested and only a few were found to be somewhat strong. I will wait to complete the EDA part of this project before determining if removing highly associated predictor variables is appropriate for this project. 
 
 
-Below is a interpretation chart for Cramer's V metrics to add the needed context:
+Below is an interpretation chart for Cramer's V metrics to add the needed context:
 
 <img width="866" alt="image" src="https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/ecb0b76e-2370-4379-9449-099d3b0004f1">
 
@@ -212,7 +212,7 @@ kruskal.test(totalcharges ~ deviceprotection,
 
 -----------------------------------------------------------------------------------------------------------
 
-### develop an exploratory correlation funel model
+### develop an exploratory correlation funnel model
 
 Develop a correlation funnel plot to see which predictors and which levels within the predictors are best to use for predicting the churn response variable.
 
@@ -350,7 +350,7 @@ This plot will help inform the final modeling process as to which predictor vari
 
 ---------------------------------------------------------------------------------------------------------------------------
 
-### adjust reponse variable for class imbalance
+### adjust response variable for class imbalance
 
 Since this data set has class imbalance with the response variable, making adjustments to the data set is one tactic to use in the modeling process. There are multiple methods available to do this such as ROSE, SMOTE (synthetic minority oversampling technique), general over/under sampling, cost sensitive learning, Tomek Links, using a differnt performance metrics, etc. 
 
@@ -415,7 +415,7 @@ Now that the train set has been adjusted, it is time to build the exploratory mo
 
 -----------------------------------------------------------------------------------------------------------------------
 
-### build an intial tree learning model
+### build an initial tree learning model
 
 Build the initial tree model using caret and set up a 10 fold cross validation train control. 
 
