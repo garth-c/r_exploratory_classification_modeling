@@ -36,6 +36,18 @@ My Rstudio session info is shown below as a benchmark for this demo:
 + evaluate the results
 + start the modeling process
 
+```mermaid
+graph TD;
+A[Import source data file] --> B[Explore the data set];
+    B --> C[Develop exploratory correlation funnel model];
+    C --> D[Select potential predictor features];
+    D --> E[Adjust response variable for class imbalance];
+    E --> F[Build initial tree learning model];
+    F --> G[Build H2O models];
+    G --> H[Evaluate the results];
+    H --> I[Start the modeling process];
+```
+
 --------------------------------------------------
 
 ### Go back to my profile page
