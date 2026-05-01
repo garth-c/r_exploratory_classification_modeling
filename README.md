@@ -32,7 +32,7 @@ My Rstudio session info is shown below as a benchmark for this demo:
 + potential predictor feature selection
 + adjust response variable for class imbalance
 + build an initial tree learning model
-+ build H2O models
++ build H<sub>2</sub>O models
 + evaluate the results
 + start the modeling process
 
@@ -43,7 +43,7 @@ A[Import source data file] --> B[Explore the data set];
     C --> D[Select potential predictor features];
     D --> E[Adjust response variable for class imbalance];
     E --> F[Build initial tree learning model];
-    F --> G[Build H2O models];
+    F --> G[Build H<sub>2</sub>O models];
     G --> H[Evaluate the results];
     H --> I[Start the final modeling process];
 ```
@@ -530,11 +530,11 @@ print(f2_score)
 
 ---------------------------------------------------------------------------------------------------------------------------------
 
-### H2O models
+### H<sub>2</sub>O models
 
-This section build more sophisticated models than the last secion. I will now build a distributed random forest (DRF) model and a gradient boosting machine (GBM) model. In general, these models are more complicated than a tree learning model. These are also exploratory models so minimal effort was put into thier configuration. Also, I am using the H2O platform to develop these models which adds some complexity with the computing cluster set up process. 
+This section build more sophisticated models than the last secion. I will now build a distributed random forest (DRF) model and a gradient boosting machine (GBM) model. In general, these models are more complicated than a tree learning model. These are also exploratory models so minimal effort was put into thier configuration. Also, I am using the H<sub>2</sub>O platform to develop these models which adds some complexity with the computing cluster set up process. 
 
-The first section of this code for H2O is around house keeping and setting up the H2O cluster:
+The first section of this code for H<sub>2</sub>O is around house keeping and setting up the H<sub>2</sub>O cluster:
 
 ```
 #load the needed libs
