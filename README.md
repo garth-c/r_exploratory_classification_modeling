@@ -5,7 +5,7 @@
 Business Objective:
 To classify customer data into one of two groups for the specific purpose of label prediction: churn or not churn. Once the model is built, apply it to new customer data that is obtained to generate this same prediction label. 
 
-For this demo, I dive deeper into the world of machine learning with a focus on predicting two distinct outcomes - hence: binary. Using the R programming language, I explore various supervised learning algorithms tailored for binary classification tasks. From a machine learning perspective, the main goal is to accurately predict one of the two possible classes based on a set of input features.
+For this demo, I dive deeper into the world of machine learning with a focus on predicting two distinct outcomes - hence: binary. Using the R programming language, I will explore various supervised learning algorithms tailored for binary classification tasks. From a machine learning perspective, the main goal is to accurately predict one of the two possible classes based on a set of input features.
 
 As part of this demo, I will explore the predictor variables and the nature of the relationship with the response variable data. Since this data was already put together in the same file by Kaggle.com, my base assumption is that the predictor variables are reasonably valid predictors for the response variable. Thus, the goal of this exercise is to validate this assumption. A description of the variables used in this demo is below. 
 
@@ -139,8 +139,7 @@ This is a bar chart showing the magnitude of the split:
 ![image](https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/6b315545-dc11-47e8-8b81-c6c22f60584c)
 
 The next task is to explore the numeric data for correlations. It looks like 'tenure' is definitely correlated to 'totalcharges' and the other numeric values are not very correlated. This correlation situation may result in removing either 'tenure' or 'totalcharges' in order to avoid any multicollinearity issues in the model. 
-- Note that multicollinearity in a model tends to artificially inflate the importance of some predictor variables beyond their actual influence on the response variable
-  - multicollinearity in the predictor data is something that we want to avoid if possible
+- Note that multicollinearity in a model tends to artificially inflate the importance of some predictor variables beyond their actual influence on the response variable. Thus, multicollinearity in the predictor data is something that we want to avoid if possible.
 
 ```
 #put numeric values into a holding data frame
@@ -503,8 +502,7 @@ confusionMatrix(data = predictions_tm,
 <img width="278" alt="image" src="https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/c9bde9f4-af30-44a8-8107-4cd142c52720">
 
 Since the response variable is imbalanced, focusing on correct 'Yes' churn predictions alone is not enough to compare models. The main concerns
-from a business perspective would be false negatives (model predicts churn = Yes but the customer actually doesn't churn), the calculating the F2 score
-is a good comparative metric between models. 
+from a business perspective would be false negatives (model predicts churn = Yes but the customer actually doesn't churn). As a result, calculating the F2 score is a good balanced comparative metric between models. 
 
 ```
 #calculate f2 score
@@ -534,7 +532,7 @@ print(f2_score)
 
 This section build more sophisticated models than the last secion. I will now build a distributed random forest (DRF) model and a gradient boosting machine (GBM) model. In general, these models are more complicated than a tree learning model. These are also exploratory models so minimal effort was put into thier configuration. Also, I am using the H<sub>2</sub>O platform to develop these models which adds some complexity with the computing cluster set up process. 
 
-The first section of this code for H<sub>2</sub>O is around house keeping and setting up the H<sub>2</sub>O cluster:
+The first section of this code for H<sub>2</sub>O is around house keeping and setting up the compute cluster:
 
 ```
 #load the needed libs
@@ -648,7 +646,7 @@ h2o::h2o.varimp_plot(rf_h2o,
 
 ![image](https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/2cd6fb18-133e-440a-aa8b-c19a311d1289)
 
-The resulting confusion matrix for the DRF model is below. The 'Yes' churn accuracy is ~50% (454/(454+448)) which is an imporovement over the tree model. This model also correctly predicted 'Yes' for churn more that it got wrong - which is a desirable outcome. 
+The resulting confusion matrix for the DRF model is below. The 'Yes' churn accuracy is ~50% (454/(454+448)) which is an improvement over the tree model. This model also correctly predicted 'Yes' for churn more that it got wrong - which is a desirable outcome. 
 
 <img width="281" alt="image" src="https://github.com/garth-c/r_exploratory_classification_modeling/assets/138831938/fd7cd077-e64c-4395-9230-36ff027adc1c">
 
